@@ -1,0 +1,9 @@
+Problem: https://leetcode.com/problems/reported-posts-ii/
+
+Solution:
+
+select round(avg(res*100),2) average_daily_percent  from
+(select a.action_date ,count(distinct r.post_id)/count(distinct a.post_id ) as res
+from actions a left join removals r on a.post_id=r.post_id
+where action='report' and a.extra='spam'
+group by action_date)
