@@ -1,0 +1,19 @@
+Problem: https://leetcode.com/problems/human-traffic-of-stadium/submissions/
+
+Solution:
+
+select id,to_char(visit_date,'yyyy-mm-dd') as visit_date,people from
+(
+select id,visit_date,people,lead(people) over(order by id) as ld1,lead(people,2) over (order by id) as ld2,
+lag(people) over(order by id) as lg1,lag(people,2) over (order by id) as lg2 from stadium
+)
+where people>=100 and
+(
+ld1>=100 and lg1>=100
+    or
+ld2>=100 and ld1>=100   
+    or
+lg2>=100 and lg1>=100   
+
+)
+order by id
