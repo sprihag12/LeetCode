@@ -1,0 +1,23 @@
+Problem: https://leetcode.com/problems/investments-in-2016/
+
+Solution 1:
+
+select sum(TIV_2016) as TIV_2016 from insurance
+where TIV_2015 in
+(select TIV_2015 from insurance
+group by TIV_2015 
+having count(pid)>1)
+and pid not in
+(select pid from insurance
+where (lat,lon) in
+(select lat,lon from insurance
+group by lat,lon 
+having count(pid)>1))
+
+Solution 2:
+
+select sum(TIV_2016) as TIV_2016 from
+(select pid,TIV_2016,TIV_2015 ,count(pid) over(partition by TIV_2015 ) as ct1,
+count(pid) over(partition by lat||lon ) as ct2
+from insurance)
+where ct1>1 and ct2=1
