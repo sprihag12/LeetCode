@@ -1,0 +1,20 @@
+Problem: https://leetcode.com/problems/game-play-analysis-v/
+
+Solution:
+
+select to_char(event_date,'yyyy-mm-dd') as install_dt,count(*) as installs,
+round(sum(case when event_date=lg-1 then 1 else 0 end)/count(*),2) as Day1_retention from
+(select event_date,player_id, 
+rank() over(partition by player_id  order by event_date ) as rk,
+lead(event_date)  over(partition by player_id  order by event_date ) as lg
+ from activity)
+ where rk=1
+group by event_date 
+select to_char(event_date,'yyyy-mm-dd') as install_dt,count(*) as installs,
+round(sum(case when event_date=lg-1 then 1 else 0 end)/count(*),2) as Day1_retention from
+(select event_date,player_id, 
+rank() over(partition by player_id  order by event_date ) as rk,
+lead(event_date)  over(partition by player_id  order by event_date ) as lg
+ from activity)
+ where rk=1
+group by event_date 
