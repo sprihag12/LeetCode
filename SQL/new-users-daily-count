@@ -1,0 +1,9 @@
+Problems: https://leetcode.com/problems/new-users-daily-count/
+
+Solution:
+
+select to_char(activity_date,'yyyy-mm-dd') as login_date  ,count(distinct user_id) as user_count  from 
+(select user_id,activity_date,rank() over(partition by user_id order by activity_date ) as rk from traffic 
+where activity='login') 
+where rk=1 and activity_date between to_date('2019-06-30')-90 and '2019-06-30'
+group by activity_date
