@@ -1,0 +1,17 @@
+Problem: https://leetcode.com/problems/monthly-transactions-ii/
+
+Solution:
+
+select nvl(x.month,y.month) as month,nvl(x.country,y.country) as country,nvl(x.t1,0) as approved_count,
+nvl(x.a1,0) as approved_amount ,nvl(y.t2,0) as chargeback_count,nvl(y.a2,0) as chargeback_amount    from
+(select to_char(trans_date,'YYYY-MM') as month,country,count(id) as t1,
+sum(amount) as a1  from transactions
+where state='approved'
+group by to_char(trans_date,'YYYY-MM'),country) x
+full outer join
+(select to_char(Chargebacks.trans_date,'YYYY-MM') as month,Transactions.country,count(Chargebacks.trans_id) as t2,
+sum(Transactions.amount) as a2 from Chargebacks  join transactions on 
+Chargebacks.trans_id   =Transactions.id
+group by to_char(Chargebacks.trans_date,'YYYY-MM'),Transactions.country) y
+on x.month=y.month and x.country=y.country
+
