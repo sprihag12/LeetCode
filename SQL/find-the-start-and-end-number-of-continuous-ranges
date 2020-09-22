@@ -1,0 +1,19 @@
+Problem: https://leetcode.com/problems/find-the-start-and-end-number-of-continuous-ranges/
+
+Solution:
+
+with cte as
+(select log_id,lead(log_id) over(order by log_id) as ld, 
+lag(log_id) over(order by log_id) as lg from logs)
+
+select y.log_id as start_id   ,x.log_id as end_id     from
+(select log_id,rownum as rn from
+(select log_id,case when ld is null then 'end'
+     when abs(log_id-ld)<>1 then 'end' 
+     end as t from cte)
+where t='end') x  join
+(select log_id,rownum as rn from
+(select log_id,case when lg is null then 'start'
+     when abs(log_id-lg)<>1 then 'start' 
+     end as t from cte)
+where t='start') y on x.rn=y.rn
