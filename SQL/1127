@@ -1,0 +1,19 @@
+Problem: https://leetcode.com/problems/user-purchase-platform/
+
+Solution:
+
+with cte as
+(select 'mobile' as platform from dual
+union
+select 'desktop' as platform from dual
+union
+select 'both' as platform from dual)
+
+select to_char(x.spend_date,'yyyy-mm-dd') as spend_date,x.platform,nvl(sum(y.tot),0) as total_amount,count(y.user_id) as total_users from
+(select distinct spend_date,cte.platform from spending,cte)x left join
+(
+select spend_date,user_id,sum(amount) as tot,
+case when count(distinct platform)=2 then 'both' else min(platform) end as platform from spending
+group by spend_date,user_id
+)y on x.spend_date=y.spend_date and x.platform=y.platform
+group by x.spend_date,x.platform
