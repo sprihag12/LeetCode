@@ -1,0 +1,8 @@
+Problem: https://leetcode.com/problems/restaurant-growth/
+
+Solution:
+
+select to_char(visited_on,'yyyy-mm-dd') as visited_on ,amount,round(avgx,2) as average_amount  from
+ (select visited_on,sum(sum(amount)) over (order by visited_on ROWS BETWEEN 6 PRECEDING AND current row) as amount,avg(sum(amount)) over (order by visited_on ROWS BETWEEN 6 PRECEDING AND current row)  as avgx  from customer
+group by visited_on)
+where visited_on>=(Select min(visited_on) from customer)+6
