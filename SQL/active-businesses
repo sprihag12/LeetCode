@@ -1,0 +1,11 @@
+Problem: https://leetcode.com/problems/active-businesses/
+
+Solution:
+
+select business_id from events
+left join
+(select event_type,avg(occurences ) as avg from events
+group by event_type ) using(event_type)
+where occurences>avg
+group by business_id
+having count(event_type)>1
