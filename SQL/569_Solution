@@ -1,0 +1,9 @@
+Problem: https://leetcode.com/problems/median-employee-salary/
+
+Solution:
+
+select id,company,salary from 
+(select id,company,salary,count(*) over(partition by company) as tot,
+row_number() over(partition by company order by salary) as rk from employee)
+where (mod(tot,2)<>0 and rk=(tot+1)/2) or (mod(tot,2)=0 and rk=(tot)/2) or
+(mod(tot,2)=0 and rk=(tot)/2+1)
