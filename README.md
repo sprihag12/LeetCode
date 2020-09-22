@@ -1,3 +1,3 @@
 # LeetCode
 
-Solutions to few SQL questions (medium/hard difficulty) inside. Python will be added soon.
+Solutions to few SQL questions (medium/hard difficulty) on LeetCode inside. Python will be added soon.
